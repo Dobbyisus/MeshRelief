@@ -45,7 +45,9 @@ public class MockTransport implements Transport {
         // Simulate network delivery
         MockTransport targetTransport = connectedTransports.get(peer.getId());
         if (targetTransport != null && targetTransport.router != null) {
-            targetTransport.receivePacket(packet, new Peer(nodeId, nodeId));
+            Packet copy = packet.copy();//sending a copy instead of of the actual packet
+            //prevents the ttl bug 
+            targetTransport.receivePacket(copy, new Peer(nodeId, nodeId));
         }
     }
 
