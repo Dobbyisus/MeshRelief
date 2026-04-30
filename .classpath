@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="app/src/main/java"/>
+	<classpathentry kind="src" path="app/src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
+	<classpathentry kind="var" path="GRADLE_USER_HOME/repository"/>
+	<classpathentry excluding="**" kind="src" path="app/src/main/resources"/>
+	<classpathentry kind="output" path="app/build/classes/java/main"/>
+</classpath>

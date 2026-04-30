@@ -1,0 +1,19 @@
+{
+  "java.project.sourcePaths": [
+    "app/src/main/java",
+    "app/src/test/java"
+  ],
+  "java.project.referencedLibraries": [
+    "app/libs/**/*.jar"
+  ],
+  "[java]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "redhat.java"
+  },
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.17.10-hotspot"
+    }
+  ]
+}
