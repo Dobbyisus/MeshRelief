@@ -1,0 +1,160 @@
+# Android build artifacts
+*.apk
+*.aar
+*.ap_
+*.dex
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Android Gradle files
+/build/
+/captures/
+.externalNativeBuild
+.cxx
+local.properties
+
+# Gradle files
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE - Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+/out/
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Eclipse
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+
+# Emulator logs
+logcat.txt
+emulator-*.log
+
+# Test outputs
+/app/build/outputs/
+test-results/
+/app/build/test-results/
+
+# Coverage reports
+coverage.xml
+jacoco.xml
+*.lcov
+.coverage
+
+# Keystore files
+*.jks
+*.keystore
+*.p12
+*.pfx
+
+# Backup files
+*.backup
+*.orig
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+.gradle
+*.swp
+*.swo
+*~
+
+# Lint
+lint-results.txt
+lint-results.html
+
+# Profiling
+profiler-*.txt
+*.trace
+
+# Misc
+.gradle/
+build/
+dist/
+.env
+.env.local
+secrets.properties
+credentials.json
+
+# Node modules (if using any JS tooling)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# SonarQube
+.scannerwork/
+sonarqube-report.json
+
+# Device logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.tmp/
+
+# Firebase
+google-services.json
+firebase-debug.log
+
+# Generated files (keep source, ignore generated)
+app/build/generated/
+.apt_generated/
+

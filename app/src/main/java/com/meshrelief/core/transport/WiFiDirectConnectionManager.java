@@ -41,7 +41,7 @@ public class WiFiDirectConnectionManager {
 
         WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = deviceAddress;
-        config.wps.setup = android.net.wifi.p2p.WpsInfo.PBC; // Push Button Config
+        // config.wpsSetup = WifiP2pConfig.WPS_SETUP_PBC; // Push Button Config - default
 
         try {
             wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {

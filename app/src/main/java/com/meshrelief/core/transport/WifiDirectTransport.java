@@ -68,10 +68,9 @@ public class WifiDirectTransport implements Transport, WiFiDirectSocketHandler.P
      * Starts the WiFi Direct transport.
      * Initializes managers and starts discovery.
      *
-     * @throws WiFiDirectManager.WiFiDirectException if startup fails
      */
     @Override
-    public void start() throws WiFiDirectManager.WiFiDirectException {
+    public void start() {
         if (isRunning) {
             return; // Already running
         }
@@ -93,10 +92,7 @@ public class WifiDirectTransport implements Transport, WiFiDirectSocketHandler.P
 
         } catch (Exception e) {
             cleanup();
-            if (e instanceof WiFiDirectManager.WiFiDirectException) {
-                throw (WiFiDirectManager.WiFiDirectException) e;
-            }
-            throw new WiFiDirectManager.WiFiDirectException("Failed to start transport: " + e.getMessage(), e);
+            System.err.println("Failed to start transport: " + e.getMessage());
         }
     }
 
@@ -120,23 +116,25 @@ public class WifiDirectTransport implements Transport, WiFiDirectSocketHandler.P
      *
      * @param packet the packet to send
      * @param peer the target peer
-     * @throws WiFiDirectManager.WiFiDirectException if send fails
      */
     @Override
-    public void send(Packet packet, Peer peer) throws WiFiDirectManager.WiFiDirectException {
+    public void send(Packet packet, Peer peer) {
         if (!isRunning) {
-            throw new WiFiDirectManager.WiFiDirectException("Transport not running");
+            System.err.println("Transport not running");
+            return;
         }
 
         if (packet == null || peer == null) {
-            throw new IllegalArgumentException("Packet and Peer cannot be null");
+            System.err.println("Packet and Peer cannot be null");
+            return;
         }
 
         try {
             // Get peer's IP address
             String peerIp = wifiDirectManager.getPeerIpAddress(peer.getId());
             if (peerIp == null || peerIp.isEmpty()) {
-                throw new WiFiDirectManager.WiFiDirectException("Peer IP address unknown: " + peer.getId());
+                System.err.println("Peer IP address unknown: " + peer.getId());
+                return;
             }
 
             // Connect if not already connected
@@ -149,11 +147,11 @@ public class WifiDirectTransport implements Transport, WiFiDirectSocketHandler.P
             System.out.println("Packet sent to " + peer.getName() + " (" + peerIp + ")");
 
         } catch (SerializationException e) {
-            throw new WiFiDirectManager.WiFiDirectException("Packet serialization failed: " + e.getMessage(), e);
+            System.err.println("Packet serialization failed: " + e.getMessage());
         } catch (IOException e) {
-            throw new WiFiDirectManager.WiFiDirectException("Network error: " + e.getMessage(), e);
+            System.err.println("Network error: " + e.getMessage());
         } catch (Exception e) {
-            throw new WiFiDirectManager.WiFiDirectException("Failed to send packet: " + e.getMessage(), e);
+            System.err.println("Failed to send packet: " + e.getMessage());
         }
     }
 

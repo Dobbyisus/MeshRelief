@@ -90,7 +90,9 @@ public class PeerManagerExample {
 
             // Example 10: View all peers
             System.out.println("10. All Peers:");
-            manager.getAllPeers().values().forEach(System.out::println);
+            for (Peer peer : manager.getAllPeers().values()) {
+                System.out.println(peer);
+            }
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

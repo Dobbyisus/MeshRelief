@@ -3,7 +3,6 @@ package com.meshrelief.core.p2p;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 /**
  * Robust peer management system for mesh networks.
@@ -107,9 +106,13 @@ public class PeerManager {
      * @return number of peers with ACTIVE status
      */
     public int getActivePeerCount() {
-        return (int) peers.values().stream()
-                .filter(Peer::isActive)
-                .count();
+        int count = 0;
+        for (Peer peer : peers.values()) {
+            if (peer.isActive()) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -267,9 +270,13 @@ public class PeerManager {
             throw new IllegalArgumentException("Status cannot be null");
         }
 
-        return peers.values().stream()
-                .filter(peer -> peer.getStatus() == status)
-                .collect(Collectors.toList());
+        List<Peer> result = new ArrayList<>();
+        for (Peer peer : peers.values()) {
+            if (peer.getStatus() == status) {
+                result.add(peer);
+            }
+        }
+        return result;
     }
 
     /**
@@ -297,14 +304,15 @@ public class PeerManager {
      */
     public synchronized List<String> clearInactivePeers() {
         List<String> removed = new ArrayList<>();
-        peers.entrySet().removeIf(entry -> {
+        Iterator<Map.Entry<String, Peer>> iterator = peers.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Peer> entry = iterator.next();
             if (entry.getValue().getTimeSinceLastSeen() > inactivityTimeout) {
                 notifyPeerRemoved(entry.getKey(), "Inactivity timeout");
                 removed.add(entry.getKey());
-                return true;
+                iterator.remove();
             }
-            return false;
-        });
+        }
         return removed;
     }
 
@@ -315,16 +323,17 @@ public class PeerManager {
      */
     public synchronized List<String> clearUnverifiedDiscoveries() {
         List<String> removed = new ArrayList<>();
-        peers.entrySet().removeIf(entry -> {
+        Iterator<Map.Entry<String, Peer>> iterator = peers.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Peer> entry = iterator.next();
             Peer peer = entry.getValue();
             if (peer.getStatus() == PeerStatus.DISCOVERED && 
                 peer.getTimeSinceLastSeen() > discoveryTimeout) {
                 notifyPeerRemoved(entry.getKey(), "Discovery verification timeout");
                 removed.add(entry.getKey());
-                return true;
+                iterator.remove();
             }
-            return false;
-        });
+        }
         return removed;
     }
 
@@ -340,11 +349,17 @@ public class PeerManager {
             throw new IllegalArgumentException("Count must be at least 1");
         }
 
-        return peers.values().stream()
-                .filter(peer -> peer.getSignalStrength() >= 0)
-                .sorted((p1, p2) -> Double.compare(p2.getSignalStrength(), p1.getSignalStrength()))
-                .limit(count)
-                .collect(Collectors.toList());
+        List<Peer> candidates = new ArrayList<>();
+        for (Peer peer : peers.values()) {
+            if (peer.getSignalStrength() >= 0) {
+                candidates.add(peer);
+            }
+        }
+        Collections.sort(candidates, (p1, p2) -> Double.compare(p2.getSignalStrength(), p1.getSignalStrength()));
+        if (candidates.size() > count) {
+            candidates = candidates.subList(0, count);
+        }
+        return candidates;
     }
 
     /**
@@ -359,10 +374,14 @@ public class PeerManager {
             throw new IllegalArgumentException("Minimum strength cannot be greater than maximum");
         }
 
-        return peers.values().stream()
-                .filter(peer -> peer.getSignalStrength() >= minStrength && 
-                               peer.getSignalStrength() <= maxStrength)
-                .collect(Collectors.toList());
+        List<Peer> result = new ArrayList<>();
+        for (Peer peer : peers.values()) {
+            double strength = peer.getSignalStrength();
+            if (strength >= minStrength && strength <= maxStrength) {
+                result.add(peer);
+            }
+        }
+        return result;
     }
 
     /**
@@ -414,43 +433,43 @@ public class PeerManager {
     }
 
     private void notifyPeerAdded(Peer peer) {
-        listeners.forEach(listener -> {
+        for (PeerListener listener : listeners) {
             try {
                 listener.onPeerAdded(peer);
             } catch (Exception e) {
                 System.err.println("Error notifying listener of peer added: " + e.getMessage());
             }
-        });
+        }
     }
 
     private void notifyPeerRemoved(String peerId, String reason) {
-        listeners.forEach(listener -> {
+        for (PeerListener listener : listeners) {
             try {
                 listener.onPeerRemoved(peerId, reason);
             } catch (Exception e) {
                 System.err.println("Error notifying listener of peer removed: " + e.getMessage());
             }
-        });
+        }
     }
 
     private void notifyPeerStatusChanged(String peerId, PeerStatus newStatus, PeerStatus oldStatus) {
-        listeners.forEach(listener -> {
+        for (PeerListener listener : listeners) {
             try {
                 listener.onPeerStatusChanged(peerId, newStatus, oldStatus);
             } catch (Exception e) {
                 System.err.println("Error notifying listener of peer status changed: " + e.getMessage());
             }
-        });
+        }
     }
 
     private void notifyPeerUpdated(Peer peer) {
-        listeners.forEach(listener -> {
+        for (PeerListener listener : listeners) {
             try {
                 listener.onPeerUpdated(peer);
             } catch (Exception e) {
                 System.err.println("Error notifying listener of peer updated: " + e.getMessage());
             }
-        });
+        }
     }
 
     /**
